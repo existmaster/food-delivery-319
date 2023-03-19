@@ -17,6 +17,16 @@ public class CookingHateoasProcessor
                 .of(model.getRequiredLink("self").getHref() + "/acceptorreject")
                 .withRel("acceptorreject")
         );
+        model.add(
+            Link
+                .of(model.getRequiredLink("self").getHref() + "/start")
+                .withRel("start")
+        );
+        model.add(
+            Link
+                .of(model.getRequiredLink("self").getHref() + "/end")
+                .withRel("end")
+        );
 
         return model;
     }

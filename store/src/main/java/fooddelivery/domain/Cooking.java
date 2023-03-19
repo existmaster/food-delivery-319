@@ -1,8 +1,6 @@
 package fooddelivery.domain;
 
 import fooddelivery.StoreApplication;
-import fooddelivery.domain.CookFinished;
-import fooddelivery.domain.CookStarted;
 import fooddelivery.domain.Rejected;
 import java.util.Date;
 import java.util.List;
@@ -26,12 +24,6 @@ public class Cooking {
     public void onPostPersist() {
         Rejected rejected = new Rejected(this);
         rejected.publishAfterCommit();
-
-        CookStarted cookStarted = new CookStarted(this);
-        cookStarted.publishAfterCommit();
-
-        CookFinished cookFinished = new CookFinished(this);
-        cookFinished.publishAfterCommit();
     }
 
     public static CookingRepository repository() {
@@ -44,6 +36,16 @@ public class Cooking {
     public void acceptOrReject(AcceptOrRejectCommand acceptOrRejectCommand) {
         Accepted accepted = new Accepted(this);
         accepted.publishAfterCommit();
+    }
+
+    public void start() {
+        CookStarted cookStarted = new CookStarted(this);
+        cookStarted.publishAfterCommit();
+    }
+
+    public void end() {
+        CookFinished cookFinished = new CookFinished(this);
+        cookFinished.publishAfterCommit();
     }
 
     public static void loadOrderInfo(OrderPlaced orderPlaced) {

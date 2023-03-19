@@ -37,8 +37,7 @@
                     @click="save"
                     v-else
             >
-                Start
-                End
+                Save
             </v-btn>
             <v-btn
                     color="deep-purple lighten-2"
@@ -73,6 +72,22 @@
                         @acceptOrReject="acceptOrReject"
                 ></AcceptOrRejectCommand>
             </v-dialog>
+            <v-btn
+                    v-if="!editMode"
+                    color="deep-purple lighten-2"
+                    text
+                    @click="start"
+            >
+                Start
+            </v-btn>
+            <v-btn
+                    v-if="!editMode"
+                    color="deep-purple lighten-2"
+                    text
+                    @click="end"
+            >
+                End
+            </v-btn>
         </v-card-actions>
 
         <v-snackbar
@@ -230,6 +245,44 @@
             },
             closeAcceptOrReject() {
                 this.acceptOrRejectDiagram = false;
+            },
+            async start() {
+                try {
+                    if(!this.offline) {
+                        var temp = await axios.put(axios.fixUrl(this.value._links['start'].href))
+                        for(var k in temp.data) {
+                            this.value[k]=temp.data[k];
+                        }
+                    }
+
+                    this.editMode = false;
+                } catch(e) {
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
+                }
+            },
+            async end() {
+                try {
+                    if(!this.offline) {
+                        var temp = await axios.put(axios.fixUrl(this.value._links['end'].href))
+                        for(var k in temp.data) {
+                            this.value[k]=temp.data[k];
+                        }
+                    }
+
+                    this.editMode = false;
+                } catch(e) {
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
+                }
             },
         },
     }
